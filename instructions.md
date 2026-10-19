@@ -19,8 +19,8 @@ Use the right feedback method for the situation:
 
 - **Inline field errors** for form validation
 - **Toast** for quick non-blocking success or failure messages
-- **Callout / Alert** for important page-level warnings or errors
-- **Popover / small confirmation** for tiny actions like copy buttons
+- **Alert** for important page-level warnings or errors
+- **Popover** for tiny actions like copy buttons
 - **Confirm dialog** for destructive or serious actions use confirm component most of the time
 - **Unsaved changes guard** when the user may lose form edits use proper unsaved-guard component
 - **Blocking overlay** only when the user truly cannot continue
@@ -45,11 +45,10 @@ Use existing components when they fit:
 - Input
 - Dialog
 - Confirm component
-- Alert / Callout
+- Alert
 - Toast
-- Sheet / Drawer
 - Skeleton
-- Tooltip / Popover
+- Popover
 - Unsaved guard
 - Empty State
 - Form and Fields and Field errors
@@ -67,8 +66,7 @@ Only create new components when nothing existing fits.
 This product is not in production and has no supported legacy consumers.
 
 - Make the clean breaking change directly instead of preserving old behavior.
-- Do not add legacy code paths, compatibility shims, fallback reads, dual
-  writes, deprecated aliases, transitional adapters, or rollback-only behavior.
+- Do not add legacy code paths.
 - Do not create data backfills solely to preserve local development, test, or
   seeded data. 
 - Update the schema, migrations, application callers, tests, fixtures, and
@@ -76,8 +74,7 @@ This product is not in production and has no supported legacy consumers.
 - Delete superseded fields, routes, actions, components, and code after their
   replacements are in place.
 - Do not ask whether backward compatibility or legacy support is required.
-  Assume it is not unless the user explicitly says that production data, a
-  released client, or an external API contract must be preserved.
+  Assume it is not unless the user explicitly says that production data.
 
 ## Project Structure
 
@@ -165,24 +162,6 @@ Every feature should include:
 - Error state
 - Empty state if relevant
 - Success/failure feedback
-- Mobile-friendly layout
 - Proper disabled states during async actions
 - Confirmation for dangerous actions
 - Unsaved-change protection where needed
-
-## Layout
-
-- Anything that can be shared for [all of the app, dashboard, section] should be put in layout to avoid repetition
-- On admin pages, page headers should contain only the page title and relevant actions. Do not add an eyebrow or page description unless the user explicitly asks for one.
-- On admin pages, card headers should contain only the card title, relevant actions, and concise real record metadata when it helps identify or scan the record. Do not add an eyebrow or generic explanatory card description unless the user explicitly asks for one.
-
-## Forms
-
-- There gonna be 2 main types of Forms regular page forms and dialog forms that are triggered from a button
-- Dialog forms if convenient should be rendered as drawers on phone
-- each of them should be prepared to show field validation errors using Field Error Component
-- on Submit - submit should show a proper button loader and disable
-- Use TanStack Form for interactive client forms by default.
-- Use Zod for form validation and map field-specific validation failures to `FieldError`.
-- Keep form copy localized through `next-intl`; do not hardcode labels, actions, or validation messages.
-         
