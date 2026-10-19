@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  experimental: {
+    // Enables forbidden() / unauthorized() used by src/lib/auth.
+    authInterrupts: true,
+  },
   turbopack: {
     rules: {
       "*.css": {
