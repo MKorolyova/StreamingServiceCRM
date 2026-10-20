@@ -52,8 +52,7 @@ export const subscribers = pgTable("subscribers", {
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     status: subscriberStatusEnum().notNull().default("ACTIVE"),
     countryCode: char({ length: 2 }).notNull().references(() => countries.countryCode, { onDelete: "restrict" }), // Lives_In
-  },
-  (t) => [index("subscribers_country_code_idx").on(t.countryCode)],
+  }
 );
 
 // Weak entity
@@ -102,10 +101,7 @@ export const payments = pgTable("payments", {
     method: varchar({ length: 30 }).notNull(),
     status: paymentStatusEnum().notNull(),
     subscriberId: uuid().notNull().references(() => subscribers.subscriberId, { onDelete: "restrict" }),  // Pays
-  },
-  (t) => [
-    index("payments_subscriber_id_idx").on(t.subscriberId),
-  ],
+  }
 );
 
 export const campaigns = pgTable("campaigns", {
@@ -152,7 +148,6 @@ export const users = pgTable( "users", {
 // Relationships
 // ---------------------------------------------------------------------------
 
-// Subscribes_To: plan history (upgrades, downgrades, cancellations).
 export const subscriptions = pgTable("subscriptions", {
     subscriberId: uuid().notNull().references(() => subscribers.subscriberId, { onDelete: "cascade" }),
     planId: uuid().notNull().references(() => plans.planId, { onDelete: "restrict" }),
@@ -164,11 +159,9 @@ export const subscriptions = pgTable("subscriptions", {
     primaryKey({ columns: [t.subscriberId, t.planId, t.startDate] }),
     // At most one active plan per subscriber.
     uniqueIndex("subscriptions_one_active_per_subscriber_idx").on(t.subscriberId).where(sql`${t.endDate} IS NULL`),
-    index("subscriptions_plan_id_idx").on(t.planId),
   ],
 );
 
-// Watched: which profile watched which movie on which device.
 export const watchSessions = pgTable("watch_sessions", {
     subscriberId: uuid().notNull(),
     profileName: varchar({ length: 50 }).notNull(),
@@ -184,13 +177,9 @@ export const watchSessions = pgTable("watch_sessions", {
       columns: [t.subscriberId, t.profileName],
       foreignColumns: [profiles.subscriberId, profiles.profileName],
     }).onDelete("cascade").onUpdate("cascade"),
-    index("watch_sessions_subscriber_watched_at_idx").on(t.subscriberId, t.watchedAt),
-    index("watch_sessions_movie_id_idx").on(t.movieId),
-    index("watch_sessions_device_id_idx").on(t.deviceId),
   ],
 );
 
-// Rated: one rating per profile per movie.
 export const ratings = pgTable("ratings", {
     subscriberId: uuid().notNull(),
     profileName: varchar({ length: 50 }).notNull(),
@@ -204,22 +193,18 @@ export const ratings = pgTable("ratings", {
       columns: [t.subscriberId, t.profileName],
       foreignColumns: [profiles.subscriberId, profiles.profileName],
     }).onDelete("cascade").onUpdate("cascade"),
-    index("ratings_movie_id_idx").on(t.movieId),
   ],
 );
 
-// Classified_As
 export const movieGenres = pgTable("movie_genres",{
     movieId: uuid().notNull().references(() => movies.movieId, { onDelete: "cascade" }),
     genreId: uuid().notNull().references(() => genres.genreId, { onDelete: "restrict" }),
   },
   (t) => [
     primaryKey({ columns: [t.movieId, t.genreId] }),
-    index("movie_genres_genre_id_idx").on(t.genreId),
   ],
 );
 
-// Redeemed: promotions apply to the account.
 export const promoCodeRedemptions = pgTable("promo_code_redemptions", {
     subscriberId: uuid().notNull().references(() => subscribers.subscriberId, { onDelete: "cascade" }),
     code: varchar({ length: 50 }).notNull().references(() => promoCodes.code, { onDelete: "restrict", onUpdate: "cascade" }),
@@ -228,8 +213,6 @@ export const promoCodeRedemptions = pgTable("promo_code_redemptions", {
   },
   (t) => [
     primaryKey({ columns: [t.subscriberId, t.code] }),
-    index("promo_code_redemptions_code_idx").on(t.code),
-    index("promo_code_redemptions_campaign_id_idx").on(t.campaignId),
   ],
 );
 
@@ -240,11 +223,9 @@ export const movieCertifications = pgTable("movie_certifications", {
   },
   (t) => [
     primaryKey({ columns: [t.movieId, t.countryCode] }),
-    index("movie_certifications_country_code_idx").on(t.countryCode),
   ],
 );
 
-// Targets: marketing sent to the account holder.
 export const campaignTargets = pgTable("campaign_targets", {
     campaignId: uuid().notNull().references(() => campaigns.campaignId, { onDelete: "cascade" }),
     subscriberId: uuid().notNull().references(() => subscribers.subscriberId, { onDelete: "cascade" }),
@@ -253,21 +234,11 @@ export const campaignTargets = pgTable("campaign_targets", {
   },
   (t) => [
     primaryKey({ columns: [t.campaignId, t.subscriberId] }),
-    index("campaign_targets_subscriber_id_idx").on(t.subscriberId),
   ],
 );
 
-
-
-
-
-
-
-
-
-
 // ---------------------------------------------------------------------------
-// Relations (for the relational query API)
+// Drizzle Relations 
 // ---------------------------------------------------------------------------
 
 export const countriesRelations = relations(countries, ({ many }) => ({
@@ -336,7 +307,9 @@ export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
     fields: [subscriptions.subscriberId],
     references: [subscribers.subscriberId],
   }),
-  plan: one(plans, { fields: [subscriptions.planId], references: [plans.planId] }),
+  plan: one(plans, { 
+    fields: [subscriptions.planId], references: [plans.planId] 
+  }),
 }));
 
 export const watchSessionsRelations = relations(watchSessions, ({ one }) => ({
@@ -344,8 +317,12 @@ export const watchSessionsRelations = relations(watchSessions, ({ one }) => ({
     fields: [watchSessions.subscriberId, watchSessions.profileName],
     references: [profiles.subscriberId, profiles.profileName],
   }),
-  movie: one(movies, { fields: [watchSessions.movieId], references: [movies.movieId] }),
-  device: one(devices, { fields: [watchSessions.deviceId], references: [devices.deviceId] }),
+  movie: one(movies, { 
+    fields: [watchSessions.movieId], references: [movies.movieId] 
+  }),
+  device: one(devices, { 
+    fields: [watchSessions.deviceId], references: [devices.deviceId] 
+  }),
 }));
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({
@@ -353,12 +330,18 @@ export const ratingsRelations = relations(ratings, ({ one }) => ({
     fields: [ratings.subscriberId, ratings.profileName],
     references: [profiles.subscriberId, profiles.profileName],
   }),
-  movie: one(movies, { fields: [ratings.movieId], references: [movies.movieId] }),
+  movie: one(movies, { 
+    fields: [ratings.movieId], references: [movies.movieId] 
+  }),
 }));
 
 export const movieGenresRelations = relations(movieGenres, ({ one }) => ({
-  movie: one(movies, { fields: [movieGenres.movieId], references: [movies.movieId] }),
-  genre: one(genres, { fields: [movieGenres.genreId], references: [genres.genreId] }),
+  movie: one(movies, { 
+    fields: [movieGenres.movieId], references: [movies.movieId] 
+  }),
+  genre: one(genres, { 
+    fields: [movieGenres.genreId], references: [genres.genreId] 
+  }),
 }));
 
 export const promoCodeRedemptionsRelations = relations(promoCodeRedemptions, ({ one }) => ({
@@ -377,7 +360,9 @@ export const promoCodeRedemptionsRelations = relations(promoCodeRedemptions, ({ 
 }));
 
 export const movieCertificationsRelations = relations(movieCertifications, ({ one }) => ({
-  movie: one(movies, { fields: [movieCertifications.movieId], references: [movies.movieId] }),
+  movie: one(movies, { 
+    fields: [movieCertifications.movieId], references: [movies.movieId] 
+  }),
   country: one(countries, {
     fields: [movieCertifications.countryCode],
     references: [countries.countryCode],
