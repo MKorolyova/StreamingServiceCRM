@@ -1,0 +1,1282 @@
+{
+  "id": "3939eb41-2e30-4d67-b233-16e8e49995f3",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.campaign_targets": {
+      "name": "campaign_targets",
+      "schema": "",
+      "columns": {
+        "campaignId": {
+          "name": "campaignId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subscriberId": {
+          "name": "subscriberId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sentDate": {
+          "name": "sentDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "response": {
+          "name": "response",
+          "type": "CampaignResponse",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'SENT'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "campaign_targets_campaignId_campaigns_campaignId_fk": {
+          "name": "campaign_targets_campaignId_campaigns_campaignId_fk",
+          "tableFrom": "campaign_targets",
+          "tableTo": "campaigns",
+          "columnsFrom": [
+            "campaignId"
+          ],
+          "columnsTo": [
+            "campaignId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "campaign_targets_subscriberId_subscribers_subscriberId_fk": {
+          "name": "campaign_targets_subscriberId_subscribers_subscriberId_fk",
+          "tableFrom": "campaign_targets",
+          "tableTo": "subscribers",
+          "columnsFrom": [
+            "subscriberId"
+          ],
+          "columnsTo": [
+            "subscriberId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "campaign_targets_campaignId_subscriberId_pk": {
+          "name": "campaign_targets_campaignId_subscriberId_pk",
+          "columns": [
+            "campaignId",
+            "subscriberId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.campaigns": {
+      "name": "campaigns",
+      "schema": "",
+      "columns": {
+        "campaignId": {
+          "name": "campaignId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "CampaignType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startDate": {
+          "name": "startDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endDate": {
+          "name": "endDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.countries": {
+      "name": "countries",
+      "schema": "",
+      "columns": {
+        "countryCode": {
+          "name": "countryCode",
+          "type": "char(2)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currencyCode": {
+          "name": "currencyCode",
+          "type": "char(3)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "countries_name_unique": {
+          "name": "countries_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.devices": {
+      "name": "devices",
+      "schema": "",
+      "columns": {
+        "deviceId": {
+          "name": "deviceId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "type": {
+          "name": "type",
+          "type": "DeviceType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "os": {
+          "name": "os",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model": {
+          "name": "model",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.genres": {
+      "name": "genres",
+      "schema": "",
+      "columns": {
+        "genreId": {
+          "name": "genreId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "genres_name_unique": {
+          "name": "genres_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.movie_certifications": {
+      "name": "movie_certifications",
+      "schema": "",
+      "columns": {
+        "movieId": {
+          "name": "movieId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "countryCode": {
+          "name": "countryCode",
+          "type": "char(2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "certification": {
+          "name": "certification",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "movie_certifications_movieId_movies_movieId_fk": {
+          "name": "movie_certifications_movieId_movies_movieId_fk",
+          "tableFrom": "movie_certifications",
+          "tableTo": "movies",
+          "columnsFrom": [
+            "movieId"
+          ],
+          "columnsTo": [
+            "movieId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "movie_certifications_countryCode_countries_countryCode_fk": {
+          "name": "movie_certifications_countryCode_countries_countryCode_fk",
+          "tableFrom": "movie_certifications",
+          "tableTo": "countries",
+          "columnsFrom": [
+            "countryCode"
+          ],
+          "columnsTo": [
+            "countryCode"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "movie_certifications_movieId_countryCode_pk": {
+          "name": "movie_certifications_movieId_countryCode_pk",
+          "columns": [
+            "movieId",
+            "countryCode"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.movie_genres": {
+      "name": "movie_genres",
+      "schema": "",
+      "columns": {
+        "movieId": {
+          "name": "movieId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "genreId": {
+          "name": "genreId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "movie_genres_movieId_movies_movieId_fk": {
+          "name": "movie_genres_movieId_movies_movieId_fk",
+          "tableFrom": "movie_genres",
+          "tableTo": "movies",
+          "columnsFrom": [
+            "movieId"
+          ],
+          "columnsTo": [
+            "movieId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "movie_genres_genreId_genres_genreId_fk": {
+          "name": "movie_genres_genreId_genres_genreId_fk",
+          "tableFrom": "movie_genres",
+          "tableTo": "genres",
+          "columnsFrom": [
+            "genreId"
+          ],
+          "columnsTo": [
+            "genreId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "movie_genres_movieId_genreId_pk": {
+          "name": "movie_genres_movieId_genreId_pk",
+          "columns": [
+            "movieId",
+            "genreId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.movies": {
+      "name": "movies",
+      "schema": "",
+      "columns": {
+        "movieId": {
+          "name": "movieId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "releaseYear": {
+          "name": "releaseYear",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "runtimeMinutes": {
+          "name": "runtimeMinutes",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maturityRating": {
+          "name": "maturityRating",
+          "type": "MaturityLevel",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.payments": {
+      "name": "payments",
+      "schema": "",
+      "columns": {
+        "paymentId": {
+          "name": "paymentId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "amountCents": {
+          "name": "amountCents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "method": {
+          "name": "method",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "PaymentStatus",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subscriberId": {
+          "name": "subscriberId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "payments_subscriberId_subscribers_subscriberId_fk": {
+          "name": "payments_subscriberId_subscribers_subscriberId_fk",
+          "tableFrom": "payments",
+          "tableTo": "subscribers",
+          "columnsFrom": [
+            "subscriberId"
+          ],
+          "columnsTo": [
+            "subscriberId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.plans": {
+      "name": "plans",
+      "schema": "",
+      "columns": {
+        "planId": {
+          "name": "planId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "monthlyPriceCents": {
+          "name": "monthlyPriceCents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maxStreams": {
+          "name": "maxStreams",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maxProfiles": {
+          "name": "maxProfiles",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resolution": {
+          "name": "resolution",
+          "type": "Resolution",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "plans_name_unique": {
+          "name": "plans_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.profiles": {
+      "name": "profiles",
+      "schema": "",
+      "columns": {
+        "subscriberId": {
+          "name": "subscriberId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "profileName": {
+          "name": "profileName",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maturityLevel": {
+          "name": "maturityLevel",
+          "type": "MaturityLevel",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'AGE_18'"
+        },
+        "language": {
+          "name": "language",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'en'"
+        },
+        "isDefault": {
+          "name": "isDefault",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {
+        "profiles_one_default_per_subscriber_idx": {
+          "name": "profiles_one_default_per_subscriber_idx",
+          "columns": [
+            {
+              "expression": "subscriberId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"profiles\".\"isDefault\"",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "profiles_subscriberId_subscribers_subscriberId_fk": {
+          "name": "profiles_subscriberId_subscribers_subscriberId_fk",
+          "tableFrom": "profiles",
+          "tableTo": "subscribers",
+          "columnsFrom": [
+            "subscriberId"
+          ],
+          "columnsTo": [
+            "subscriberId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "profiles_subscriberId_profileName_pk": {
+          "name": "profiles_subscriberId_profileName_pk",
+          "columns": [
+            "subscriberId",
+            "profileName"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.promo_code_redemptions": {
+      "name": "promo_code_redemptions",
+      "schema": "",
+      "columns": {
+        "subscriberId": {
+          "name": "subscriberId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "campaignId": {
+          "name": "campaignId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "redeemedDate": {
+          "name": "redeemedDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "promo_code_redemptions_subscriberId_subscribers_subscriberId_fk": {
+          "name": "promo_code_redemptions_subscriberId_subscribers_subscriberId_fk",
+          "tableFrom": "promo_code_redemptions",
+          "tableTo": "subscribers",
+          "columnsFrom": [
+            "subscriberId"
+          ],
+          "columnsTo": [
+            "subscriberId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "promo_code_redemptions_code_promo_codes_code_fk": {
+          "name": "promo_code_redemptions_code_promo_codes_code_fk",
+          "tableFrom": "promo_code_redemptions",
+          "tableTo": "promo_codes",
+          "columnsFrom": [
+            "code"
+          ],
+          "columnsTo": [
+            "code"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "cascade"
+        },
+        "promo_code_redemptions_campaignId_campaigns_campaignId_fk": {
+          "name": "promo_code_redemptions_campaignId_campaigns_campaignId_fk",
+          "tableFrom": "promo_code_redemptions",
+          "tableTo": "campaigns",
+          "columnsFrom": [
+            "campaignId"
+          ],
+          "columnsTo": [
+            "campaignId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "promo_code_redemptions_subscriberId_code_pk": {
+          "name": "promo_code_redemptions_subscriberId_code_pk",
+          "columns": [
+            "subscriberId",
+            "code"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.promo_codes": {
+      "name": "promo_codes",
+      "schema": "",
+      "columns": {
+        "code": {
+          "name": "code",
+          "type": "varchar(50)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "discountPercent": {
+          "name": "discountPercent",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maxUses": {
+          "name": "maxUses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiryDate": {
+          "name": "expiryDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ratings": {
+      "name": "ratings",
+      "schema": "",
+      "columns": {
+        "subscriberId": {
+          "name": "subscriberId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "profileName": {
+          "name": "profileName",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "movieId": {
+          "name": "movieId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stars": {
+          "name": "stars",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ratedDate": {
+          "name": "ratedDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ratings_movieId_movies_movieId_fk": {
+          "name": "ratings_movieId_movies_movieId_fk",
+          "tableFrom": "ratings",
+          "tableTo": "movies",
+          "columnsFrom": [
+            "movieId"
+          ],
+          "columnsTo": [
+            "movieId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "ratings_subscriberId_profileName_profiles_subscriberId_profileName_fk": {
+          "name": "ratings_subscriberId_profileName_profiles_subscriberId_profileName_fk",
+          "tableFrom": "ratings",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "subscriberId",
+            "profileName"
+          ],
+          "columnsTo": [
+            "subscriberId",
+            "profileName"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "ratings_subscriberId_profileName_movieId_pk": {
+          "name": "ratings_subscriberId_profileName_movieId_pk",
+          "columns": [
+            "subscriberId",
+            "profileName",
+            "movieId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.subscribers": {
+      "name": "subscribers",
+      "schema": "",
+      "columns": {
+        "subscriberId": {
+          "name": "subscriberId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "status": {
+          "name": "status",
+          "type": "SubscriberStatus",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ACTIVE'"
+        },
+        "countryCode": {
+          "name": "countryCode",
+          "type": "char(2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "subscribers_countryCode_countries_countryCode_fk": {
+          "name": "subscribers_countryCode_countries_countryCode_fk",
+          "tableFrom": "subscribers",
+          "tableTo": "countries",
+          "columnsFrom": [
+            "countryCode"
+          ],
+          "columnsTo": [
+            "countryCode"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "subscribers_email_unique": {
+          "name": "subscribers_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.subscriptions": {
+      "name": "subscriptions",
+      "schema": "",
+      "columns": {
+        "subscriberId": {
+          "name": "subscriberId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "planId": {
+          "name": "planId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startDate": {
+          "name": "startDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endDate": {
+          "name": "endDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancelReason": {
+          "name": "cancelReason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "subscriptions_one_active_per_subscriber_idx": {
+          "name": "subscriptions_one_active_per_subscriber_idx",
+          "columns": [
+            {
+              "expression": "subscriberId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"subscriptions\".\"endDate\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "subscriptions_subscriberId_subscribers_subscriberId_fk": {
+          "name": "subscriptions_subscriberId_subscribers_subscriberId_fk",
+          "tableFrom": "subscriptions",
+          "tableTo": "subscribers",
+          "columnsFrom": [
+            "subscriberId"
+          ],
+          "columnsTo": [
+            "subscriberId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "subscriptions_planId_plans_planId_fk": {
+          "name": "subscriptions_planId_plans_planId_fk",
+          "tableFrom": "subscriptions",
+          "tableTo": "plans",
+          "columnsFrom": [
+            "planId"
+          ],
+          "columnsTo": [
+            "planId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "subscriptions_subscriberId_planId_startDate_pk": {
+          "name": "subscriptions_subscriberId_planId_startDate_pk",
+          "columns": [
+            "subscriberId",
+            "planId",
+            "startDate"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "clerkUserId": {
+          "name": "clerkUserId",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "UserRole",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isActive": {
+          "name": "isActive",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_clerkUserId_unique": {
+          "name": "users_clerkUserId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "clerkUserId"
+          ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.watch_sessions": {
+      "name": "watch_sessions",
+      "schema": "",
+      "columns": {
+        "subscriberId": {
+          "name": "subscriberId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "profileName": {
+          "name": "profileName",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "movieId": {
+          "name": "movieId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deviceId": {
+          "name": "deviceId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "watchedAt": {
+          "name": "watchedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "minutesWatched": {
+          "name": "minutesWatched",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "completed": {
+          "name": "completed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "watch_sessions_movieId_movies_movieId_fk": {
+          "name": "watch_sessions_movieId_movies_movieId_fk",
+          "tableFrom": "watch_sessions",
+          "tableTo": "movies",
+          "columnsFrom": [
+            "movieId"
+          ],
+          "columnsTo": [
+            "movieId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "watch_sessions_deviceId_devices_deviceId_fk": {
+          "name": "watch_sessions_deviceId_devices_deviceId_fk",
+          "tableFrom": "watch_sessions",
+          "tableTo": "devices",
+          "columnsFrom": [
+            "deviceId"
+          ],
+          "columnsTo": [
+            "deviceId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "watch_sessions_subscriberId_profileName_profiles_subscriberId_profileName_fk": {
+          "name": "watch_sessions_subscriberId_profileName_profiles_subscriberId_profileName_fk",
+          "tableFrom": "watch_sessions",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "subscriberId",
+            "profileName"
+          ],
+          "columnsTo": [
+            "subscriberId",
+            "profileName"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "watch_sessions_subscriberId_profileName_movieId_deviceId_watchedAt_pk": {
+          "name": "watch_sessions_subscriberId_profileName_movieId_deviceId_watchedAt_pk",
+          "columns": [
+            "subscriberId",
+            "profileName",
+            "movieId",
+            "deviceId",
+            "watchedAt"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.CampaignResponse": {
+      "name": "CampaignResponse",
+      "schema": "public",
+      "values": [
+        "SENT",
+        "OPENED",
+        "CLICKED",
+        "REDEEMED",
+        "IGNORED"
+      ]
+    },
+    "public.CampaignType": {
+      "name": "CampaignType",
+      "schema": "public",
+      "values": [
+        "PROMO",
+        "WIN_BACK",
+        "NEW_RELEASE"
+      ]
+    },
+    "public.DeviceType": {
+      "name": "DeviceType",
+      "schema": "public",
+      "values": [
+        "TV",
+        "PHONE",
+        "TABLET",
+        "BROWSER"
+      ]
+    },
+    "public.MaturityLevel": {
+      "name": "MaturityLevel",
+      "schema": "public",
+      "values": [
+        "ALL",
+        "AGE_7",
+        "AGE_13",
+        "AGE_16",
+        "AGE_18"
+      ]
+    },
+    "public.PaymentStatus": {
+      "name": "PaymentStatus",
+      "schema": "public",
+      "values": [
+        "PAID",
+        "FAILED",
+        "REFUNDED"
+      ]
+    },
+    "public.Resolution": {
+      "name": "Resolution",
+      "schema": "public",
+      "values": [
+        "SD",
+        "HD",
+        "FULL_HD",
+        "ULTRA_HD"
+      ]
+    },
+    "public.SubscriberStatus": {
+      "name": "SubscriberStatus",
+      "schema": "public",
+      "values": [
+        "ACTIVE",
+        "PAUSED",
+        "CANCELED"
+      ]
+    },
+    "public.UserRole": {
+      "name": "UserRole",
+      "schema": "public",
+      "values": [
+        "ADMIN",
+        "SUPPORT_AGENT",
+        "BILLING",
+        "MARKETING",
+        "CONTENT_MANAGER",
+        "ANALYST"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
