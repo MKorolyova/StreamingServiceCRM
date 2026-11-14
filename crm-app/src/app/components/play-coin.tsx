@@ -1,8 +1,8 @@
 import { useId } from "react";
 import { cn } from "cn";
 
-const INK = "var(--color-forest)";
-const PAPER = "var(--color-lemongrass)";
+const INK = "var(--foreground)";
+const PAPER = "var(--background)";
 
 // A rounded, video-player style button turned away from the viewer, so its
 // face is slightly narrowed and its thick edge shows on the left.

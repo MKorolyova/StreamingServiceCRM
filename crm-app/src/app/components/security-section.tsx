@@ -1,5 +1,8 @@
+import { cn } from "cn";
 import { KeyRound, ShieldCheck, TriangleAlert, Users } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { PERMISSIONS, ROLE_PERMISSIONS } from "@/lib/auth/permissions";
 
 import { BracketLabel, Corners } from "./landing-primitives";
@@ -46,7 +49,8 @@ export function SecuritySection() {
 
   return (
     <section id="security" className="scroll-mt-16 px-5 lg:px-8">
-      <div className="mx-auto w-full relative max-w-7xl border border-forest bg-forest px-6 py-16 text-lemongrass sm:px-10 lg:px-16 lg:py-24">
+      {/* `dark` inverts the theme tokens for everything inside this panel. */}
+      <div className="dark relative mx-auto w-full max-w-7xl bg-background px-6 py-16 text-foreground sm:px-10 lg:px-16 lg:py-24">
         <Corners className="size-5" />
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <div className="lg:py-6">
@@ -54,7 +58,7 @@ export function SecuritySection() {
             <h2 className="mt-6 text-3xl leading-[1.08] font-medium tracking-[-0.03em] text-balance sm:text-5xl">
               Everyone sees what they need, and nothing else
             </h2>
-            <p className="mt-6 max-w-md text-lg leading-relaxed opacity-80">
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
               Subscriber and payment data is sensitive. Access is decided by role, enforced on
               the server, and narrow by default.
             </p>
@@ -65,18 +69,20 @@ export function SecuritySection() {
                   <dd className="text-5xl font-medium tracking-[-0.04em] tabular-nums sm:text-6xl">
                     {stat.value}
                   </dd>
-                  <dt className="mt-2 text-sm opacity-70">{stat.label}</dt>
+                  <dt className="mt-2 text-sm text-muted-foreground">{stat.label}</dt>
                 </div>
               ))}
             </dl>
 
             <ul className="mt-10 flex flex-wrap gap-2">
               {ROLE_LABELS.map((role) => (
-                <li
-                  key={role}
-                  className="border border-dashed border-lemongrass/45 px-3 py-1 font-mono text-xs tracking-wider uppercase opacity-80"
-                >
-                  {role}
+                <li key={role}>
+                  <Badge
+                    variant="outline"
+                    className="h-auto border-dashed px-3 py-1 font-mono font-normal tracking-wider uppercase"
+                  >
+                    {role}
+                  </Badge>
                 </li>
               ))}
             </ul>
@@ -85,21 +91,20 @@ export function SecuritySection() {
           <SecurityCard />
         </div>
 
-        <div className="relative mt-12 border border-lemongrass/30 lg:mt-16">
+        <Card className="relative mt-12 overflow-visible bg-transparent py-0 text-base lg:mt-16">
           <Corners />
-          <ul className="grid md:grid-cols-2 lg:grid-cols-4">
-            {FEATURES.map((feature, index) => (
-              <li
-                key={feature.title}
-                className={`flex flex-col border-dashed border-lemongrass/35 p-6 ${FEATURE_DIVIDERS[index]}`}
-              >
-                <feature.icon aria-hidden className="size-5 opacity-80" strokeWidth={1.5} />
-                <h3 className="mt-10 text-lg leading-snug font-medium tracking-tight">{feature.title}</h3>
-                <p className="mt-2 leading-relaxed opacity-70">{feature.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <CardContent className="px-0">
+            <ul className="grid md:grid-cols-2 lg:grid-cols-4">
+              {FEATURES.map((feature, index) => (
+                <li key={feature.title} className={cn("flex flex-col border-dashed p-6", FEATURE_DIVIDERS[index])}>
+                  <feature.icon aria-hidden className="size-5 text-muted-foreground" strokeWidth={1.5} />
+                  <h3 className="mt-10 text-lg leading-snug font-medium tracking-tight">{feature.title}</h3>
+                  <p className="mt-2 leading-relaxed text-muted-foreground">{feature.body}</p>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );

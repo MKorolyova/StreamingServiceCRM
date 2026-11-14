@@ -1,5 +1,7 @@
 import { Clapperboard, CreditCard, Headset, Megaphone } from "lucide-react";
 
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { BracketLabel, Corners } from "./landing-primitives";
 
 const TEAMS = [
@@ -31,7 +33,7 @@ const TEAMS = [
 
 export function AboutSection() {
   return (
-    <section id="about" className="scroll-mt-16 border-t border-dashed border-forest/35 px-5 py-20 lg:px-8 lg:py-28">
+    <section id="about" className="scroll-mt-16 px-5 py-20 lg:px-8 lg:py-28">
       <div className="mx-auto w-full max-w-7xl">
         <BracketLabel>About</BracketLabel>
 
@@ -44,21 +46,22 @@ export function AboutSection() {
 
         <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
           {TEAMS.map((team) => (
-            <li
-              key={team.label}
-              className="relative flex flex-col border border-forest/25 bg-forest/[0.03] p-6 transition-colors hover:bg-forest/[0.06]"
-            >
-              <Corners />
-              <div className="flex items-center justify-between">
-                <BracketLabel marker>{team.label}</BracketLabel>
-                <team.icon aria-hidden className="size-5 opacity-70" strokeWidth={1.5} />
-              </div>
-              <span
-                aria-hidden
-                className="mt-1 ml-[0.3rem] block h-2.5 border-b border-l border-dashed border-forest/45"
-              />
-              <h3 className="mt-1.5 text-xl leading-snug font-medium tracking-tight">{team.title}</h3>
-              <p className="mt-3 leading-relaxed opacity-75">{team.body}</p>
+            <li key={team.label}>
+              <Card className="relative h-full gap-3 text-base transition-colors [--card-spacing:--spacing(6)] hover:bg-muted">
+                <Corners />
+                <CardHeader>
+                  <CardDescription>
+                    <BracketLabel marker>{team.label}</BracketLabel>
+                  </CardDescription>
+                  <CardAction>
+                    <team.icon aria-hidden className="size-5 text-muted-foreground" strokeWidth={1.5} />
+                  </CardAction>
+                  {/* Dashed elbow leading from the label down to the title. */}
+                  <span aria-hidden className="ml-[0.3rem] h-2.5 border-b border-l border-dashed" />
+                  <CardTitle className="mt-1 text-xl tracking-tight">{team.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="leading-relaxed text-muted-foreground">{team.body}</CardContent>
+              </Card>
             </li>
           ))}
         </ul>

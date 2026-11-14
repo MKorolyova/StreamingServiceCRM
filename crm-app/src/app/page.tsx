@@ -1,3 +1,5 @@
+import { Separator } from "@/components/ui/separator";
+
 import { AboutSection } from "./components/about-section";
 import { AnalyticsSection } from "./components/analytics-section";
 import { HeroSection } from "./components/hero-section";
@@ -7,11 +9,13 @@ import { SiteHeader } from "./components/site-header";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-1 flex-col bg-lemongrass text-forest selection:bg-forest selection:text-lemongrass">
+    <div className="flex flex-1 flex-col selection:bg-primary selection:text-primary-foreground">
       <SiteHeader />
       <main className="flex flex-col">
         <HeroSection />
+        <Separator variant="dashed" />
         <AboutSection />
+        <Separator variant="dashed" />
         <AnalyticsSection />
         <SecuritySection />
       </main>

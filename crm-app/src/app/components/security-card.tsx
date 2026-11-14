@@ -1,9 +1,11 @@
 import { useId } from "react";
 
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+
 import { Corners } from "./landing-primitives";
 
-const INK = "var(--color-forest)";
-const PAPER = "var(--color-lemongrass)";
+const INK = "var(--foreground)";
+const PAPER = "var(--background)";
 
 const SHIELD_PATH =
   "M150 22 C190 50 236 60 272 60 L272 172 C272 252 216 302 150 328 C84 302 28 252 28 172 L28 60 C64 60 110 50 150 22 Z";
@@ -60,19 +62,23 @@ function ContourShield({ className }: { className?: string }) {
 /** Light card with cut corners, a contour-line shield and a short access statement. */
 export function SecurityCard() {
   return (
-    <figure className="relative flex min-h-[30rem] flex-col justify-between bg-lemongrass p-7 font-mono text-[0.8rem] leading-relaxed tracking-[0.16em] text-forest uppercase sm:p-9 lg:min-h-full">
-      <Corners className="size-4" />
-
-      <p aria-hidden className="flex justify-between gap-4">
-        <span>&ldquo;Subscriber ID&rdquo;:</span>
-        <span>1ED-9367</span>
-      </p>
-
-      <ContourShield className="pointer-events-none absolute top-1/2 left-1/2 h-[58%] w-auto -translate-x-[44%] -translate-y-[60%] overflow-visible" />
-
-      <figcaption className="relative max-w-[17rem]">
-        Access is decided by role and checked on the server, before anything reaches the browser.
-      </figcaption>
-    </figure>
+    // `light` restores the default theme tokens inside the dark security panel.
+    <Card className="light relative min-h-[30rem] justify-between bg-background font-mono text-[0.8rem] leading-relaxed tracking-[0.16em] uppercase ring-0 [--card-spacing:--spacing(9)] lg:min-h-full">
+      <Corners className="size-4 text-primary" />
+      <CardHeader>
+        <CardDescription aria-hidden className="flex justify-between gap-4 text-[0.8rem] text-card-foreground">
+          <span>&ldquo;Subscriber ID&rdquo;:</span>
+          <span>1ED-9367</span>
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-1 items-center justify-center">
+        <ContourShield className="h-52 w-auto translate-x-3 overflow-visible sm:h-60" />
+      </CardContent>
+      <CardContent>
+        <p className="max-w-[17rem]">
+          Access is decided by role and checked on the server, before anything reaches the browser.
+        </p>
+      </CardContent>
+    </Card>
   );
 }
