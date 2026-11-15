@@ -2,11 +2,11 @@ import { z } from "zod";
 import {
   countryCodeSchema,
   currencyCodeSchema,
-  listQuerySchema,
-  requireAtLeastOneField,
 } from "./common";
 
-export const countryKeySchema = z.object({ countryCode: countryCodeSchema });
+export const countryKeySchema = z.object({
+  countryCode: countryCodeSchema,
+});
 
 export const createCountrySchema = z.object({
   countryCode: countryCodeSchema,
@@ -14,8 +14,6 @@ export const createCountrySchema = z.object({
   currencyCode: currencyCodeSchema,
 });
 
-export const updateCountrySchema = requireAtLeastOneField(
-  createCountrySchema.omit({ countryCode: true }).partial(),
-);
-
-export const listCountriesQuerySchema = listQuerySchema(["countryCode", "name", "currencyCode"]);
+export const updateCountrySchema = createCountrySchema
+  .omit({ countryCode: true})
+  .partial();

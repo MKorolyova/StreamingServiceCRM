@@ -1,19 +1,26 @@
 import { z } from "zod";
 import { deviceTypeEnum } from "@/db/schema";
-import { listQuerySchema, requireAtLeastOneField, uuidSchema } from "./common";
+import { 
+  uuidSchema,
+  paginationSchema,
+} from "./common";
 
-export const deviceTypeSchema = z.enum(deviceTypeEnum.enumValues, "Invalid device type");
 
-export const deviceKeySchema = z.object({ deviceId: uuidSchema });
+export const deviceKeySchema = z.object({ 
+  deviceId: uuidSchema 
+});
 
 export const createDeviceSchema = z.object({
-  type: deviceTypeSchema,
+  type: z.enum(deviceTypeEnum.enumValues, "Invalid device type"),
   os: z.string().trim().min(1, "OS is required").max(50, "OS is too long"),
   model: z.string().trim().min(1, "Model is required").max(100, "Model is too long"),
 });
 
-export const updateDeviceSchema = requireAtLeastOneField(createDeviceSchema.partial());
+export const updateDeviceSchema = createDeviceSchema
+  .partial();
 
-export const listDevicesQuerySchema = listQuerySchema(["type", "os", "model"]).extend({
-  type: deviceTypeSchema.optional(),
+export const paginationDevicesSchema = paginationSchema.extend({
+  type: z.enum(deviceTypeEnum.enumValues, "Invalid device type").optional(),
+  os: z.string().trim().max(50, "OS is too long").optional(),
+  model: z.string().trim().max(100, "Model is too long").optional(),
 });

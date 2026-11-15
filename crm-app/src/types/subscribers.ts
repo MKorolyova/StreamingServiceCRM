@@ -5,7 +5,7 @@ import type {
   createProfileSchema,
   createSubscriberSchema,
   createSubscriptionSchema,
-  listSubscribersQuerySchema,
+  paginationSubscribersSchema,
   profileKeySchema,
   subscriberKeySchema,
   subscriberStatusSchema,
@@ -20,7 +20,7 @@ export type Subscriber = typeof subscribers.$inferSelect;
 export type SubscriberKey = z.infer<typeof subscriberKeySchema>;
 export type CreateSubscriberInput = z.infer<typeof createSubscriberSchema>;
 export type UpdateSubscriberInput = z.infer<typeof updateSubscriberSchema>;
-export type ListSubscribersQuery = z.infer<typeof listSubscribersQuerySchema>;
+export type ListSubscribersQuery = z.infer<typeof paginationSubscribersSchema>;
 
 export type Profile = typeof profiles.$inferSelect;
 export type ProfileKey = z.infer<typeof profileKeySchema>;

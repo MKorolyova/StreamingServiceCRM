@@ -1,16 +1,15 @@
 import type { z } from "zod";
-import type { devices } from "@/db/schema";
+import type { deviceTypeEnum, devices } from "@/db/schema";
 import type {
   createDeviceSchema,
   deviceKeySchema,
-  deviceTypeSchema,
-  listDevicesQuerySchema,
+  paginationDevicesSchema,
   updateDeviceSchema,
 } from "@/validators/devices";
 
-export type DeviceType = z.infer<typeof deviceTypeSchema>;
+export type DeviceType = (typeof deviceTypeEnum.enumValues)[number];
 export type Device = typeof devices.$inferSelect;
 export type DeviceKey = z.infer<typeof deviceKeySchema>;
 export type CreateDeviceInput = z.infer<typeof createDeviceSchema>;
 export type UpdateDeviceInput = z.infer<typeof updateDeviceSchema>;
-export type ListDevicesQuery = z.infer<typeof listDevicesQuerySchema>;
+export type ListDevicesQuery = z.infer<typeof paginationDevicesSchema>;

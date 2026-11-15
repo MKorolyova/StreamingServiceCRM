@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { campaignResponseEnum, campaignTypeEnum } from "@/db/schema";
-import { isoDateSchema, listQuerySchema, requireAtLeastOneField, uuidSchema } from "./common";
+import {
+  isoDateSchema,
+  uuidSchema,
+  paginationSchema,
+} from "./common";
 
 export const campaignTypeSchema = z.enum(campaignTypeEnum.enumValues, "Invalid campaign type");
 export const campaignResponseSchema = z.enum(campaignResponseEnum.enumValues, "Invalid response");
@@ -9,7 +13,10 @@ export const campaignResponseSchema = z.enum(campaignResponseEnum.enumValues, "I
 // Campaigns
 // ---------------------------------------------------------------------------
 
-// Shared by create and update; refinements are added after, since .partial() can't follow .refine().
+export const campaignKeySchema = z.object({
+  campaignId: uuidSchema,
+});
+
 const campaignFieldsSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name is too long"),
   type: campaignTypeSchema,
@@ -17,21 +24,15 @@ const campaignFieldsSchema = z.object({
   endDate: isoDateSchema,
 });
 
-export const campaignKeySchema = z.object({ campaignId: uuidSchema });
-
 export const createCampaignSchema = campaignFieldsSchema
   .refine((campaign) => campaign.endDate >= campaign.startDate, { message: "End date must be on or after the start date", path: ["endDate"] });
 
 // Only checks the range when both dates are sent; the service re-checks against stored values.
-export const updateCampaignSchema = requireAtLeastOneField(campaignFieldsSchema.partial())
+export const updateCampaignSchema = campaignFieldsSchema
+  .partial()
   .refine((campaign) => !campaign.startDate || !campaign.endDate || campaign.endDate >= campaign.startDate, { message: "End date must be on or after the start date", path: ["endDate"] });
 
-export const listCampaignsQuerySchema = listQuerySchema([
-  "name",
-  "type",
-  "startDate",
-  "endDate",
-]).extend({
+export const paginationCampaignsQuerySchema = paginationSchema.extend({
   type: campaignTypeSchema.optional(),
   activeOn: isoDateSchema.optional(),
 });
@@ -45,7 +46,9 @@ export const campaignTargetKeySchema = z.object({
   subscriberId: uuidSchema,
 });
 
-export const createCampaignTargetSchema = campaignTargetKeySchema.extend({
+export const createCampaignTargetSchema = z.object({
+  campaignId: uuidSchema,
+  subscriberId: uuidSchema,
   sentDate: isoDateSchema.optional(),
   response: campaignResponseSchema.optional(),
 });
@@ -56,9 +59,11 @@ export const targetSubscribersSchema = z.object({
 })
   .refine((target) => new Set(target.subscriberIds).size === target.subscriberIds.length, { message: "Subscribers must be unique", path: ["subscriberIds"] });
 
-export const updateCampaignTargetSchema = z.object({ response: campaignResponseSchema });
+export const updateCampaignTargetSchema = z.object({
+  response: campaignResponseSchema,
+});
 
-export const listCampaignTargetsQuerySchema = listQuerySchema(["sentDate", "response"]).extend({
+export const paginationCampaignTargetsQuerySchema = paginationSchema.extend({
   campaignId: uuidSchema,
   response: campaignResponseSchema.optional(),
 });

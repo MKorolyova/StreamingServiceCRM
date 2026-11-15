@@ -7,8 +7,8 @@ import type {
   campaignTypeSchema,
   createCampaignSchema,
   createCampaignTargetSchema,
-  listCampaignTargetsQuerySchema,
-  listCampaignsQuerySchema,
+  paginationCampaignTargetsQuerySchema,
+  paginationCampaignsQuerySchema,
   targetSubscribersSchema,
   updateCampaignSchema,
   updateCampaignTargetSchema,
@@ -21,11 +21,11 @@ export type Campaign = typeof campaigns.$inferSelect;
 export type CampaignKey = z.infer<typeof campaignKeySchema>;
 export type CreateCampaignInput = z.infer<typeof createCampaignSchema>;
 export type UpdateCampaignInput = z.infer<typeof updateCampaignSchema>;
-export type ListCampaignsQuery = z.infer<typeof listCampaignsQuerySchema>;
+export type ListCampaignsQuery = z.infer<typeof paginationCampaignsQuerySchema>;
 
 export type CampaignTarget = typeof campaignTargets.$inferSelect;
 export type CampaignTargetKey = z.infer<typeof campaignTargetKeySchema>;
 export type CreateCampaignTargetInput = z.infer<typeof createCampaignTargetSchema>;
 export type TargetSubscribersInput = z.infer<typeof targetSubscribersSchema>;
 export type UpdateCampaignTargetInput = z.infer<typeof updateCampaignTargetSchema>;
-export type ListCampaignTargetsQuery = z.infer<typeof listCampaignTargetsQuerySchema>;
+export type ListCampaignTargetsQuery = z.infer<typeof paginationCampaignTargetsQuerySchema>;

@@ -1,16 +1,15 @@
 import type { z } from "zod";
-import type { plans } from "@/db/schema";
+import type { plans, resolutionEnum } from "@/db/schema";
 import type {
   createPlanSchema,
-  listPlansQuerySchema,
+  paginationPlansSchema,
   planKeySchema,
-  resolutionSchema,
   updatePlanSchema,
 } from "@/validators/plans";
 
-export type Resolution = z.infer<typeof resolutionSchema>;
+export type Resolution = (typeof resolutionEnum.enumValues)[number];
 export type Plan = typeof plans.$inferSelect;
 export type PlanKey = z.infer<typeof planKeySchema>;
 export type CreatePlanInput = z.infer<typeof createPlanSchema>;
 export type UpdatePlanInput = z.infer<typeof updatePlanSchema>;
-export type ListPlansQuery = z.infer<typeof listPlansQuerySchema>;
+export type ListPlansQuery = z.infer<typeof paginationPlansSchema>;

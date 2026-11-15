@@ -1,47 +1,53 @@
 import { z } from "zod";
 import {
-  dateRangeQuerySchema,
   isoDateSchema,
-  listQuerySchema,
-  requireAtLeastOneField,
   uuidSchema,
+  paginationSchema,
 } from "./common";
 
-const profileNameSchema = z.string().trim().min(1, "Profile name is required").max(50, "Profile name is too long");
 
 // ---------------------------------------------------------------------------
 // Watch sessions
 // ---------------------------------------------------------------------------
+
+const profileNameSchema = z.string().trim().min(1, "Profile name is required").max(50, "Profile name is too long");
+const minutesWatchedSchema = z.number("Minutes watched must be a number").int("Minutes watched must be a whole number").min(0, "Minutes watched cannot be negative").max(32_767, "Minutes watched is too large");
 
 export const watchSessionKeySchema = z.object({
   subscriberId: uuidSchema,
   profileName: profileNameSchema,
   movieId: uuidSchema,
   deviceId: uuidSchema,
-  // Arrives as an ISO string over JSON / form data.
   watchedAt: z.coerce.date("Watched at must be a valid date"),
 });
 
-const watchProgressSchema = z.object({
-  minutesWatched: z.number("Minutes watched must be a number").int("Minutes watched must be a whole number").min(0, "Minutes watched cannot be negative").max(32_767, "Minutes watched is too large").optional(),
+export const createWatchSessionSchema = z.object({
+  subscriberId: uuidSchema,
+  profileName: profileNameSchema,
+  movieId: uuidSchema,
+  deviceId: uuidSchema,
+  watchedAt: z.coerce.date("Watched at must be a valid date"),
+  minutesWatched: minutesWatchedSchema.optional(),
   completed: z.boolean("Completed must be true or false").optional(),
-});
-
-// minutesWatched <= movie runtime needs the movie row, so it's checked in the service layer.
-export const createWatchSessionSchema = watchSessionKeySchema.extend(watchProgressSchema.shape)
+})
   .refine((session) => session.watchedAt <= new Date(), { message: "Watched at cannot be in the future", path: ["watchedAt"] });
 
-export const updateWatchSessionSchema = requireAtLeastOneField(watchProgressSchema);
+export const updateWatchSessionSchema = z.object({
+  minutesWatched: minutesWatchedSchema,
+  completed: z.boolean("Completed must be true or false"),
+})
+  .partial();
 
-export const listWatchSessionsQuerySchema = listQuerySchema(["watchedAt", "minutesWatched"])
-  .extend({
-    subscriberId: uuidSchema.optional(),
-    profileName: profileNameSchema.optional(),
-    movieId: uuidSchema.optional(),
-    deviceId: uuidSchema.optional(),
-    completed: z.stringbool().optional(),
-  })
-  .and(dateRangeQuerySchema);
+export const paginationWatchSessionsQuerySchema = paginationSchema.extend({
+  subscriberId: uuidSchema.optional(),
+  profileName: profileNameSchema.optional(),
+  movieId: uuidSchema.optional(),
+  deviceId: uuidSchema.optional(),
+  completed: z.stringbool().optional(),
+  from: isoDateSchema.optional(),
+  to: isoDateSchema.optional(),
+})
+  .refine((query) => !query.from || !query.to || query.to >= query.from, { message: "End date must be on or after the start date", path: ["to"] });
 
 // ---------------------------------------------------------------------------
 // Ratings
@@ -55,14 +61,20 @@ export const ratingKeySchema = z.object({
   movieId: uuidSchema,
 });
 
+export const createRatingSchema = z.object({
+  subscriberId: uuidSchema,
+  profileName: profileNameSchema,
+  movieId: uuidSchema,
+  stars: starsSchema,
+  ratedDate: isoDateSchema.optional(),
+});
+
 export const updateRatingSchema = z.object({
   stars: starsSchema,
   ratedDate: isoDateSchema.optional(),
 });
 
-export const createRatingSchema = ratingKeySchema.extend(updateRatingSchema.shape);
-
-export const listRatingsQuerySchema = listQuerySchema(["ratedDate", "stars"]).extend({
+export const paginationRatingsQuerySchema = paginationSchema.extend({
   subscriberId: uuidSchema.optional(),
   profileName: profileNameSchema.optional(),
   movieId: uuidSchema.optional(),
