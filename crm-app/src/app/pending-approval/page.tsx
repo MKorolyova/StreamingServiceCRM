@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Waiting for approval · Streaming CR
 export default async function PendingApprovalPage() {
   const user = await getCurrentUser();
   if (!user) return unauthorized();
-  if (user.status === "APPROVED") return redirect("/");
+  if (user.status === "APPROVED") return redirect("/dashboard");
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-4 p-4">

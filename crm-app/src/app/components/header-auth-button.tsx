@@ -15,7 +15,16 @@ function GetStartedLink() {
 
 async function SessionButton() {
   const { userId } = await auth();
-  return userId ? <SignOutButton className={"cut-corners h-10 px-4 text-[0.95rem]"} /> : <GetStartedLink />;
+  if (!userId) return <GetStartedLink />;
+
+  return (
+    <div className="flex items-center gap-2">
+      <SignOutButton variant="ghost" className="h-10 px-3 text-[0.95rem] font-normal text-muted-foreground" />
+      <Button size="lg" className={"cut-corners h-10 px-4 text-[0.95rem]"} nativeButton={false} render={<Link href="/dashboard" />}>
+        Dashboard
+      </Button>
+    </div>
+  );
 }
 
 export function HeaderAuthButton() {

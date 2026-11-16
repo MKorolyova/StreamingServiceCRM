@@ -21,7 +21,7 @@ export default function Forbidden() {
         variant="outline"
         className="self-start"
       >
-        Back to dashboard
+        Back to home
       </Button>
     </main>
   );
