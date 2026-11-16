@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { getAuthContext } from "@/lib/auth/context";
+import { getAuthContext } from "@/lib/auth/auth-context";
 import type { Permission } from "@/constants/permissions";
 
 type RestrictedProps = {
@@ -13,6 +13,7 @@ type RestrictedProps = {
 
 /** Server component that only renders its children for permitted users. */
 export async function Restricted({ permission, children, fallback = null }: RestrictedProps) {
+  // getAuthContext returns null instead of leaving the page, so only this fragment is hidden.
   const context = await getAuthContext();
   const required = typeof permission === "string" ? [permission] : permission;
 

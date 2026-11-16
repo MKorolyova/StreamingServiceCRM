@@ -11,8 +11,7 @@ export default function Unauthorized() {
         <LogIn />
         <AlertTitle>Sign in required</AlertTitle>
         <AlertDescription>
-          You&apos;re not signed in, or your account is still waiting for an admin to approve it
-          and assign a role.
+          You need to sign in with your staff account to open this page.
         </AlertDescription>
       </Alert>
       <Button render={<Link href="/sign-in" />} nativeButton={false} className="self-start">

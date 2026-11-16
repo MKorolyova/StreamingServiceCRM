@@ -85,6 +85,6 @@ export const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
   ANALYST: VIEW_PERMISSIONS,
 };
 
-export function getRolePermissions(role: UserRole): ReadonlySet<Permission> {
-  return new Set(ROLE_PERMISSIONS[role]);
+export function getRolePermissions(role: UserRole | null): ReadonlySet<Permission> {
+  return new Set(role ? ROLE_PERMISSIONS[role] : []);
 }
