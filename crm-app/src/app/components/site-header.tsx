@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+import { HeaderAuthButton } from "./header-auth-button";
 import { PlayMark } from "./landing-primitives";
 
 const NAV_LINKS = [
@@ -33,9 +34,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <Button size="lg" className="cut-corners h-10 px-4 text-[0.95rem]" nativeButton={false} render={<a href="#get-started" />}>
-          Get started
-        </Button>
+        <HeaderAuthButton />
       </div>
       <Separator variant="dashed" />
     </header>

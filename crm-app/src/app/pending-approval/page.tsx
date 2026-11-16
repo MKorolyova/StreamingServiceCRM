@@ -5,14 +5,14 @@ import { Hourglass } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser, isApprovedUser } from "@/lib/auth/user-context";
+import { getCurrentUser } from "@/lib/auth/user-context";
 
 export const metadata: Metadata = { title: "Waiting for approval · Streaming CRM" };
 
 export default async function PendingApprovalPage() {
   const user = await getCurrentUser();
   if (!user) return unauthorized();
-  if (isApprovedUser(user)) return redirect("/");
+  if (user.status === "APPROVED") return redirect("/");
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-4 p-4">
