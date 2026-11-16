@@ -6,6 +6,7 @@ import {
 import {
   boolean,
   char,
+  check,
   date,
   foreignKey,
   index,
@@ -34,6 +35,7 @@ export const campaignTypeEnum = pgEnum("CampaignType", ["PROMO", "WIN_BACK", "NE
 export const deviceTypeEnum = pgEnum("DeviceType", ["TV", "PHONE", "TABLET", "BROWSER"]);
 export const campaignResponseEnum = pgEnum("CampaignResponse", ["SENT","OPENED","CLICKED","REDEEMED","IGNORED"]);
 export const userRoleEnum = pgEnum("UserRole", ["ADMIN","SUPPORT_AGENT","BILLING","MARKETING","CONTENT_MANAGER","ANALYST"]);
+export const userStatusEnum = pgEnum("UserStatus", ["PENDING", "APPROVED"]);
 
 // ---------------------------------------------------------------------------
 // Entities
@@ -65,7 +67,6 @@ export const profiles = pgTable("profiles", {
   },
   (t) => [
     primaryKey({ columns: [t.subscriberId, t.profileName] }),
-    // At most one default per account; "at least one" is a deferred trigger.
     uniqueIndex("profiles_one_default_per_subscriber_idx").on(t.subscriberId).where(sql`${t.isDefault}`),
   ],
 );
@@ -137,11 +138,14 @@ export const users = pgTable( "users", {
     clerkUserId: varchar({ length: 64 }).notNull().unique(),
     email: varchar({ length: 255 }).notNull().unique(),
     name: varchar({ length: 100 }).notNull(),
+    status: userStatusEnum().notNull().default("PENDING"),
     role: userRoleEnum(),
-    isActive: boolean().notNull().default(false),
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
-  }
+  },
+  (t) => [
+    check("users_role_matches_status_check", sql`(${t.status} = 'APPROVED') = (${t.role} IS NOT NULL)`),
+  ],
 );
 
 // ---------------------------------------------------------------------------
