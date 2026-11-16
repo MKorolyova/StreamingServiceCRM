@@ -17,13 +17,11 @@ const FOCUS_RING_IMPORTANT = {
   boxShadow: "0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent) !important",
 } as const;
 
-// Same shape as the `cut-corners` utility in globals.css.
 const CUT_CORNERS =
   "polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px)";
 
 const OUTLINE_BUTTON = {
   height: "2.5rem",
-  // Clerk draws these edges with a box-shadow; replace it with a real border.
   border: "1px solid var(--border) !important",
   borderRadius: "0",
   boxShadow: "none !important",
@@ -33,11 +31,6 @@ const OUTLINE_BUTTON = {
   "&:focus-visible": FOCUS_RING_IMPORTANT,
 } as const;
 
-/**
- * Makes Clerk's prebuilt components follow the app theme: the tokens from
- * globals.css (so dark mode carries over), square corners, flat surfaces,
- * dashed dividers, mono uppercase labels and the cut-corner primary button.
- */
 export const clerkAppearance = {
   variables: {
     colorPrimary: "var(--primary)",
@@ -86,7 +79,6 @@ export const clerkAppearance = {
     socialButtonsBlockButton: OUTLINE_BUTTON,
     socialButtonsBlockButtonText: { fontSize: "0.875rem", fontWeight: 500 },
     alternativeMethodsBlockButton: OUTLINE_BUTTON,
-    // The "Last used" tag on a social button: same dark square outline as the button.
     lastAuthenticationStrategyBadge: {
       border: "1px solid var(--foreground) !important",
       borderRadius: "0",
@@ -134,14 +126,12 @@ export const clerkAppearance = {
       textTransform: "none",
       "&:hover": { backgroundColor: "color-mix(in oklab, var(--primary) 80%, transparent)" },
       "&:focus-visible": { boxShadow: "none", outline: "2px solid var(--ring)", outlineOffset: "2px" },
-      // Clerk draws a gradient highlight on top of the button; the design is flat.
       "&::after": { display: "none" },
     },
 
     footer: {
       background: "var(--background)",
       borderTop: "1px dashed var(--border) !important",
-      "& > div": { borderColor: "transparent" },
     },
     footerActionText: { color: "var(--muted-foreground)" },
     footerActionLink: {

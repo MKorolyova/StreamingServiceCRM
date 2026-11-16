@@ -3,6 +3,7 @@ import { unauthorized } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 
+import { createUserFromClerk } from "@/lib/auth/create-user-from-clerk";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import type { User } from "@/types/users";
@@ -12,7 +13,8 @@ export const getCurrentUser = cache(async (): Promise<User | null> => {
   if (!clerkUserId) return null;
 
   const [user] = await db.select().from(users).where(eq(users.clerkUserId, clerkUserId)).limit(1);
-  return user ?? null;
+  // First request after sign-up: there is a Clerk session but no row yet.
+  return user ?? createUserFromClerk(clerkUserId);
 });
 
 export async function requireCurrentUser(): Promise<User> {

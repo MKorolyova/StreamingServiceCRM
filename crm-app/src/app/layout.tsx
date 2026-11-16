@@ -28,7 +28,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-          <ClerkProvider signInUrl="/sign-in" signInFallbackRedirectUrl="/" appearance={clerkAppearance}>
+          <ClerkProvider signInUrl="/sign-in" signInFallbackRedirectUrl="/" signUpFallbackRedirectUrl="/pending-approval" appearance={clerkAppearance}>
                   {children}
           </ClerkProvider>
           <Toaster />
