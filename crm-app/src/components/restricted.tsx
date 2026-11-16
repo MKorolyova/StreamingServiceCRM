@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { getAuthContext } from "@/lib/auth/context";
-import type { Permission } from "@/lib/auth/permissions";
+import type { Permission } from "@/constants/permissions";
 
 type RestrictedProps = {
   /** All listed permissions are required. */

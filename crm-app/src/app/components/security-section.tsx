@@ -3,7 +3,7 @@ import { KeyRound, ShieldCheck, TriangleAlert, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { PERMISSIONS, ROLE_PERMISSIONS } from "@/lib/auth/permissions";
+import { PERMISSIONS, ROLE_PERMISSIONS } from "@/constants/permissions";
 
 import { BracketLabel, Corners } from "./landing-primitives";
 import { SecurityCard } from "./security-card";

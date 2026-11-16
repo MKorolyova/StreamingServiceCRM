@@ -1,6 +1,4 @@
-import type { userRoleEnum } from "@/db/schema";
-
-export type UserRole = (typeof userRoleEnum.enumValues)[number];
+import type { UserRole } from "@/constants/constants";
 
 export const PERMISSIONS = [
   "subscribers.view",
@@ -85,15 +83,6 @@ export const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
     "reports.view",
   ],
   ANALYST: VIEW_PERMISSIONS,
-};
-
-export const ROLE_LABELS: Record<UserRole, string> = {
-  ADMIN: "Admin",
-  SUPPORT_AGENT: "Support agent",
-  BILLING: "Billing",
-  MARKETING: "Marketing",
-  CONTENT_MANAGER: "Content manager",
-  ANALYST: "Analyst",
 };
 
 export function getRolePermissions(role: UserRole): ReadonlySet<Permission> {
