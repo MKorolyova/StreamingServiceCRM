@@ -1,0 +1,16 @@
+export const SEED_CAMPAIGNS = [
+  { type: "PROMO", name: "Black Friday", startDate: "2025-11-24", endDate: "2025-12-01" },
+  { type: "PROMO", name: "Holiday Special", startDate: "2025-12-15", endDate: "2026-01-05" },
+  { type: "PROMO", name: "Annual Plan Offer", startDate: "2026-01-10", endDate: "2026-02-10" },
+  { type: "PROMO", name: "Spring Sale", startDate: "2026-03-16", endDate: "2026-04-06" },
+  { type: "PROMO", name: "Summer Sale", startDate: "2026-06-15", endDate: "2026-07-13" },
+  { type: "PROMO", name: "Student Discount", startDate: "2026-08-24", endDate: "2026-09-30" },
+  { type: "WIN_BACK", name: "We Miss You", startDate: "2025-12-01", endDate: "2025-12-31" },
+  { type: "WIN_BACK", name: "Come Back Offer", startDate: "2026-02-02", endDate: "2026-02-28" },
+  { type: "WIN_BACK", name: "Second Chance", startDate: "2026-05-04", endDate: "2026-05-31" },
+  { type: "WIN_BACK", name: "Welcome Back", startDate: "2026-09-07", endDate: "2026-10-04" },
+  { type: "NEW_RELEASE", name: "Premiere Night", startDate: "2026-01-19", endDate: "2026-01-26" },
+  { type: "NEW_RELEASE", name: "Fresh Originals", startDate: "2026-04-13", endDate: "2026-05-03" },
+  { type: "NEW_RELEASE", name: "Season Launch", startDate: "2026-07-20", endDate: "2026-08-09" },
+  { type: "NEW_RELEASE", name: "New This Week", startDate: "2026-10-12", endDate: "2026-10-19" },
+] as const;
