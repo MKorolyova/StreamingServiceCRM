@@ -1,0 +1,168 @@
+import {
+  Activity,
+  ChartNoAxesColumn,
+  Clapperboard,
+  CreditCard,
+  Globe,
+  LayoutDashboard,
+  Megaphone,
+  MonitorSmartphone,
+  ShieldCheck,
+  Shapes,
+  Star,
+  Tag,
+  Ticket,
+  UserRound,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+
+import type { Permission } from "@/constants/permissions";
+
+export type CrmSection = {
+  key: string;
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  description: string;
+  permission: Permission | null;
+  isAvailable: boolean;
+};
+
+export const CRM_SECTIONS: CrmSection[] = [
+  {
+    key: "overview",
+    label: "Overview",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    description: "The numbers your team asks about every morning.",
+    permission: null,
+    isAvailable: true,
+  },
+  {
+    key: "subscribers",
+    label: "Subscribers",
+    href: "/subscribers",
+    icon: Users,
+    description: "Accounts with their plan, history, viewing and payments.",
+    permission: "subscribers.view",
+    isAvailable: true,
+  },
+  {
+    key: "profiles",
+    label: "Profiles",
+    href: "/profiles",
+    icon: UserRound,
+    description: "Maturity levels, languages and how many profiles each plan really uses.",
+    permission: "subscribers.view",
+    isAvailable: true,
+  },
+  {
+    key: "payments",
+    label: "Payments",
+    href: "/payments",
+    icon: CreditCard,
+    description: "Failed payments to chase, refunds and revenue by plan and country.",
+    permission: "payments.view",
+    isAvailable: true,
+  },
+  {
+    key: "plans",
+    label: "Plans",
+    href: "/plans",
+    icon: Tag,
+    description: "Prices, streams, profiles and resolution per plan.",
+    permission: "plans.view",
+    isAvailable: false,
+  },
+  {
+    key: "movies",
+    label: "Movies",
+    href: "/movies",
+    icon: Clapperboard,
+    description: "The catalog with views, completion and ratings per movie.",
+    permission: "catalog.view",
+    isAvailable: true,
+  },
+  {
+    key: "genres",
+    label: "Genres",
+    href: "/genres",
+    icon: Shapes,
+    description: "Watch time, ratings and completion per genre, and genres nothing uses.",
+    permission: "catalog.view",
+    isAvailable: true,
+  },
+  {
+    key: "ratings",
+    label: "Ratings",
+    href: "/ratings",
+    icon: Star,
+    description: "How the catalog is rated, and what is watched but not loved.",
+    permission: "catalog.view",
+    isAvailable: true,
+  },
+  {
+    key: "activity",
+    label: "Activity",
+    href: "/activity",
+    icon: Activity,
+    description: "When people watch, what they finish and who has gone quiet.",
+    permission: "activity.view",
+    isAvailable: true,
+  },
+  {
+    key: "devices",
+    label: "Devices",
+    href: "/devices",
+    icon: MonitorSmartphone,
+    description: "The devices, systems and models subscribers watch on.",
+    permission: "devices.view",
+    isAvailable: true,
+  },
+  {
+    key: "countries",
+    label: "Countries",
+    href: "/countries",
+    icon: Globe,
+    description: "Subscribers, revenue and viewing per country, and certification gaps.",
+    permission: "reports.view",
+    isAvailable: true,
+  },
+  {
+    key: "campaigns",
+    label: "Campaigns",
+    href: "/campaigns",
+    icon: Megaphone,
+    description: "Promos, win-backs and new releases, from sent to redeemed.",
+    permission: "campaigns.view",
+    isAvailable: true,
+  },
+  {
+    key: "promo-codes",
+    label: "Promo codes",
+    href: "/promo-codes",
+    icon: Ticket,
+    description: "Discount codes, how close they are to their limits and what they cost.",
+    permission: "promoCodes.view",
+    isAvailable: true,
+  },
+  {
+    key: "reports",
+    label: "Churn & retention",
+    href: "/reports",
+    icon: ChartNoAxesColumn,
+    description: "Who leaves, when, why, and which cohorts stay.",
+    permission: "reports.view",
+    isAvailable: true,
+  },
+  {
+    key: "users",
+    label: "Users",
+    href: "/users",
+    icon: ShieldCheck,
+    description: "Approve staff accounts and assign roles.",
+    permission: "users.view",
+    isAvailable: true,
+  },
+];
