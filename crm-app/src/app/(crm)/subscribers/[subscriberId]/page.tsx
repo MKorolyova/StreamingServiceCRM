@@ -14,6 +14,7 @@ import { ChartCard } from "../../../../components/chart-card";
 import { DataTable } from "../../../../components/data-table";
 import { PageHeader } from "../../../components/page-header";
 import { StatTile } from "../../../components/stat-tile";
+import { SubscriberPayments } from "../components/subscriber-payments";
 import { SubscriberProfiles } from "../components/subscriber-profiles";
 import { SubscriberStatusBadge } from "../components/subscriber-status-badge";
 import { SubscriptionTimeline } from "./components/subscription-timeline";
@@ -22,6 +23,7 @@ import {
   listCampaignTouches,
   listDevicesUsed,
   listPromoRedemptions,
+  listSubscriberPayments,
   listSubscriberProfiles,
   listSubscriptionHistory,
 } from "./queries";
@@ -52,7 +54,7 @@ export default async function SubscriberPage({ params }: { params: Promise<{ sub
         <PageHeader
           label="Subscriber"
           title={subscriber.name}
-          description={`${subscriber.email} · ${subscriber.countryName} · joined ${formatDate(subscriber.createdAt)}`}
+          description={`${subscriber.email} · ${subscriber.countryName} · joined ${formatDate(new Date(subscriber.createdAt))}`}
         >
           <div className="mt-4">
             <SubscriberStatusBadge status={subscriber.status} />
@@ -133,7 +135,7 @@ export default async function SubscriberPage({ params }: { params: Promise<{ sub
                   device.profileNames.join(", "),
                   formatCount(device.sessions),
                   formatWatchTime(device.minutesWatched),
-                  formatDate(device.lastWatchedAt),
+                  formatDate(new Date(device.lastWatchedAt)),
                 ],
               }))}
             />
