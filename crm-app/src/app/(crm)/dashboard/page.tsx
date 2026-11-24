@@ -9,23 +9,20 @@ import { LIST_PRICE_CURRENCY } from "@/constants/constants";
 import { requireAuthContext } from "@/lib/auth/auth-context";
 import { formatCount, formatMoney, formatWatchTime } from "@/lib/format";
 
-import { BarList } from "../../components/bar-list";
-import { ChartCard } from "../../components/chart-card";
+import { BarList } from "../../../components/bar-list";
+import { ChartCard } from "../../../components/chart-card";
 import { PageHeader } from "../../components/page-header";
 import { StatTile } from "../../components/stat-tile";
 import {
   getMonthlyRecurringRevenue,
   getPaymentTotalsSince,
   getSubscriberTotals,
-  listRecentFailedPaymentsOfActiveSubscribers,
   listTopMoviesSince,
-  sumMinutesWatchedSince,
 } from "./queries";
 
 export const metadata: Metadata = { title: "Overview · Streaming CRM" };
 
 const RECENT_DAYS = 30;
-const WEEK_DAYS = 7;
 
 function LinkButton({ href, children }: { href: string; children: ReactNode }) {
   return (
@@ -38,24 +35,19 @@ function LinkButton({ href, children }: { href: string; children: ReactNode }) {
 
 export default async function DashboardPage() {
   const context = await requireAuthContext();
-  const now = new Date();
-  const recentSince = subDays(now, RECENT_DAYS);
-  const weekSince = subDays(now, WEEK_DAYS);
+  const recentSince = subDays(new Date(), RECENT_DAYS);
 
   const canViewSubscribers = context.hasPermission("subscribers.view");
   const canViewPayments = context.hasPermission("payments.view");
   const canViewActivity = context.hasPermission("activity.view");
   const canViewCatalog = context.hasPermission("catalog.view");
 
-  const [subscriberTotals, recurringRevenue, paymentTotals, failedPayments, minutesWatched, topMovies] =
-    await Promise.all([
-      canViewSubscribers ? getSubscriberTotals(recentSince) : null,
-      canViewPayments ? getMonthlyRecurringRevenue() : null,
-      canViewPayments ? getPaymentTotalsSince(recentSince) : null,
-      canViewPayments ? listRecentFailedPaymentsOfActiveSubscribers(5) : null,
-      canViewActivity ? sumMinutesWatchedSince(weekSince) : null,
-      canViewCatalog && canViewActivity ? listTopMoviesSince(recentSince, 5) : null,
-    ]);
+  const [subscriberTotals, recurringRevenue, paymentTotals, topMovies] = await Promise.all([
+    canViewSubscribers ? getSubscriberTotals(recentSince) : null,
+    canViewPayments ? getMonthlyRecurringRevenue() : null,
+    canViewPayments ? getPaymentTotalsSince(recentSince) : null,
+    canViewCatalog && canViewActivity ? listTopMoviesSince(recentSince, 5) : null,
+  ]);
 
   const firstName = context.user.name.split(" ")[0];
 

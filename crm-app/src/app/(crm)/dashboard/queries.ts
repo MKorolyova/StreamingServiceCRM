@@ -1,5 +1,5 @@
 import { and, count, desc, eq, gte, isNull, sql, sum } from "drizzle-orm";
-import { countries, movies, payments, plans, subscribers, subscriptions, watchSessions } from "@/db/schema";
+import { movies, payments, plans, subscribers, subscriptions, watchSessions } from "@/db/schema";
 import { db } from "@/db";
 
 export type SubscriberTotals = {
@@ -62,48 +62,7 @@ export async function getPaymentTotalsSince(since: Date): Promise<PaymentTotals>
   return row ?? { paid: 0, failed: 0, refunded: 0 };
 }
 
-export type FailedPaymentEntry = {
-  paymentId: string;
-  subscriberId: string;
-  subscriberName: string;
-  amountCents: number;
-  currencyCode: string;
-  method: string;
-  createdAt: Date;
-};
-
-export async function listRecentFailedPaymentsOfActiveSubscribers(limit: number): Promise<FailedPaymentEntry[]> {
-  return db
-    .select({
-      paymentId: payments.paymentId,
-      subscriberId: subscribers.subscriberId,
-      subscriberName: subscribers.name,
-      amountCents: payments.amountCents,
-      currencyCode: countries.currencyCode,
-      method: payments.method,
-      createdAt: payments.createdAt,
-    })
-    .from(payments)
-    .innerJoin(subscribers, eq(subscribers.subscriberId, payments.subscriberId))
-    .innerJoin(countries, eq(countries.countryCode, subscribers.countryCode))
-    .where(and(eq(payments.status, "FAILED"), eq(subscribers.status, "ACTIVE")))
-    .orderBy(desc(payments.createdAt))
-    .limit(limit);
-}
-
-export async function sumMinutesWatchedSince(since: Date): Promise<number> {
-  const [row] = await db
-    .select({ 
-      value: sum(watchSessions.minutesWatched).mapWith(Number) 
-    })
-    .from(watchSessions)
-    .where(gte(watchSessions.watchedAt, since));
-
-  return row?.value ?? 0;
-}
-
 export type TopMovieEntry = {
-  movieId: string;
   title: string;
   minutesWatched: number;
   sessions: number;
@@ -112,7 +71,6 @@ export type TopMovieEntry = {
 export async function listTopMoviesSince(since: Date, limit: number): Promise<TopMovieEntry[]> {
   return db
     .select({ 
-      movieId: movies.movieId, 
       title: movies.title, 
       minutesWatched: sum(watchSessions.minutesWatched).mapWith(Number),
       sessions: count() 
