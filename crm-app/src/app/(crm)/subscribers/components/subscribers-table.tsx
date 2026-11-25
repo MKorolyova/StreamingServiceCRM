@@ -2,14 +2,15 @@
 
 import { Fragment, useState } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "cn";
 
 import { formatDateOnly, formatWatchTime } from "@/lib/format";
 
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
+
+import { SortableHead } from "../../../../components/sortable-head";
 
 import { SubscriberProfiles } from "./subscriber-profiles";
 import { SubscriberStatusBadge } from "./subscriber-status-badge";
@@ -19,54 +20,6 @@ import type { SubscriberListEntry } from "../queries";
 
 
 const COLUMN_COUNT = 7;
-
-type SortableHeadProps = {
-  column: ListSubscribersQuery["sortBy"];
-  label: string;
-  sortBy: ListSubscribersQuery["sortBy"];
-  sortDir: ListSubscribersQuery["sortDir"];
-  align?: "left" | "right";
-};
-
-function SortableHead({ column, label, sortBy, sortDir, align = "left" }: SortableHeadProps) {
-
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const isSorted = sortBy === column;
-  const direction = sortDir === "asc" ? "desc" : "asc";
-
-  const params = new URLSearchParams(searchParams);
-
-  params.set("sortBy", column);
-  params.set("sortDir", direction);
-  params.delete("page");
-
-  return (
-    <TableHead
-      className={cn(
-        "h-11 px-3 font-mono text-[0.7rem] font-normal tracking-[0.14em] text-muted-foreground uppercase",
-        align === "right" && "text-right",
-      )}
-  
-    >
-      <Button
-        variant="ghost"
-        size="sm"
-        className="-mx-2 px-2 font-mono text-[0.7rem] font-normal tracking-[0.14em] text-muted-foreground uppercase"
-        nativeButton={false}
-        render={<Link href={`${pathname}?${params}`} scroll={false} />}
-      >
-        {label}
-        <span data-icon="inline-end" aria-hidden className="flex flex-col">
-          <ChevronUp className={cn("-mb-1 size-3", isSorted && sortDir === "asc" ? "text-foreground" : "opacity-40")} />
-          <ChevronDown className={cn("size-3", isSorted && sortDir === "desc" ? "text-foreground" : "opacity-40")} />
-        </span>
-      </Button>
-
-    </TableHead>
-  );
-}
 
 type SubscribersTableProps = {
   subscribersEntries: SubscriberListEntry[];
