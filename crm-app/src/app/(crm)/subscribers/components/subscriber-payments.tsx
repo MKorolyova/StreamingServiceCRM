@@ -9,8 +9,8 @@ export type SubscriberPaymentRow = {
   isPaid: boolean;
 };
 
-/** Payment history shown in the row that drops down under a subscriber. */
 export function SubscriberPayments({ payments }: { payments: SubscriberPaymentRow[] }) {
+  
   if (payments.length === 0) {
     return <p className="py-2 text-muted-foreground">No payments recorded for this subscriber yet.</p>;
   }

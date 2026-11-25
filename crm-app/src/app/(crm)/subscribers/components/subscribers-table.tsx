@@ -1,100 +1,164 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "cn";
+
+import { formatDateOnly, formatWatchTime } from "@/lib/format";
 
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import type { SubscriberStatus } from "@/types/subscribers";
 
-import { SubscriberPayments, type SubscriberPaymentRow } from "./subscriber-payments";
-import { SubscriberProfilesPopover, type SubscriberProfileRow } from "./subscriber-profiles-popover";
+import { SubscriberProfiles } from "./subscriber-profiles";
 import { SubscriberStatusBadge } from "./subscriber-status-badge";
 
-/** A subscriber with every value already formatted for display. */
-export type SubscriberRow = {
-  subscriberId: string;
-  name: string;
-  email: string;
-  createdDate: string;
-  status: SubscriberStatus;
-  profiles: SubscriberProfileRow[];
-  watchTime: string;
-  /** Null when the viewer may not see payments. */
-  payments: SubscriberPaymentRow[] | null;
+import type { ListSubscribersQuery } from "@/types/subscribers";
+import type { SubscriberListEntry } from "../queries";
+
+
+const COLUMN_COUNT = 7;
+
+type SortableHeadProps = {
+  column: ListSubscribersQuery["sortBy"];
+  label: string;
+  sortBy: ListSubscribersQuery["sortBy"];
+  sortDir: ListSubscribersQuery["sortDir"];
+  align?: "left" | "right";
 };
 
-const HEADING_CLASS_NAME = "h-11 px-3 font-mono text-[0.7rem] font-normal tracking-[0.14em] text-muted-foreground uppercase";
+function SortableHead({ column, label, sortBy, sortDir, align = "left" }: SortableHeadProps) {
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const isSorted = sortBy === column;
+  const direction = sortDir === "asc" ? "desc" : "asc";
+
+  const params = new URLSearchParams(searchParams);
+
+  params.set("sortBy", column);
+  params.set("sortDir", direction);
+  params.delete("page");
+
+  return (
+    <TableHead
+      className={cn(
+        "h-11 px-3 font-mono text-[0.7rem] font-normal tracking-[0.14em] text-muted-foreground uppercase",
+        align === "right" && "text-right",
+      )}
+  
+    >
+      <Button
+        variant="ghost"
+        size="sm"
+        className="-mx-2 px-2 font-mono text-[0.7rem] font-normal tracking-[0.14em] text-muted-foreground uppercase"
+        nativeButton={false}
+        render={<Link href={`${pathname}?${params}`} scroll={false} />}
+      >
+        {label}
+        <span data-icon="inline-end" aria-hidden className="flex flex-col">
+          <ChevronUp className={cn("-mb-1 size-3", isSorted && sortDir === "asc" ? "text-foreground" : "opacity-40")} />
+          <ChevronDown className={cn("size-3", isSorted && sortDir === "desc" ? "text-foreground" : "opacity-40")} />
+        </span>
+      </Button>
+
+    </TableHead>
+  );
+}
 
 type SubscribersTableProps = {
-  rows: SubscriberRow[];
-  showPayments: boolean;
+  subscribersEntries: SubscriberListEntry[];
+  sortBy: ListSubscribersQuery["sortBy"];
+  sortDir: ListSubscribersQuery["sortDir"];
 };
 
-export function SubscribersTable({ rows, showPayments }: SubscribersTableProps) {
+export function SubscribersTable({ subscribersEntries, sortBy, sortDir }: SubscribersTableProps) {
+
   const [expandedSubscriberId, setExpandedSubscriberId] = useState<string | null>(null);
-  const columnCount = showPayments ? 7 : 6;
 
   return (
     <div className="border">
       <Table>
+
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead className={HEADING_CLASS_NAME}>Name</TableHead>
-            <TableHead className={HEADING_CLASS_NAME}>Email</TableHead>
-            <TableHead className={HEADING_CLASS_NAME}>Created</TableHead>
-            <TableHead className={HEADING_CLASS_NAME}>Status</TableHead>
-            <TableHead className={HEADING_CLASS_NAME}>Profiles</TableHead>
-            <TableHead className={cn(HEADING_CLASS_NAME, "text-right")}>Watch time</TableHead>
-            {showPayments && <TableHead className={HEADING_CLASS_NAME}>Payments</TableHead>}
+            <SortableHead column="name" label="Name" sortBy={sortBy} sortDir={sortDir} />
+            <SortableHead column="email" label="Email" sortBy={sortBy} sortDir={sortDir} />
+            <SortableHead column="created" label="Created" sortBy={sortBy} sortDir={sortDir} />
+            <SortableHead column="status" label="Status" sortBy={sortBy} sortDir={sortDir} />
+            <SortableHead column="plan" label="Plan" sortBy={sortBy} sortDir={sortDir} />
+            <SortableHead column="profiles" label="Profiles" sortBy={sortBy} sortDir={sortDir} />
+            <SortableHead column="watchTime" label="Watch time" sortBy={sortBy} sortDir={sortDir} align="right" />
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {rows.map((row) => {
+
+          {subscribersEntries.map((row) => {
             const isExpanded = expandedSubscriberId === row.subscriberId;
-            const paymentsId = `payments-${row.subscriberId}`;
+            const detailsId = `details-${row.subscriberId}`;
 
             return (
               <Fragment key={row.subscriberId}>
-                <TableRow className={cn("border-dashed", isExpanded && "border-b-0 bg-muted/50")}>
-                  <TableCell className="px-3 py-3 font-medium">{row.name}</TableCell>
-                  <TableCell className="px-3 text-muted-foreground">{row.email}</TableCell>
-                  <TableCell className="px-3 tabular-nums">{row.createdDate}</TableCell>
+
+                <TableRow className={cn("border-dashed", isExpanded && "border-b-0 bg-muted/50 hover:bg-muted/50")}>
+
+                  <TableCell className="px-3 py-3 font-medium">
+                    <Link href={`/subscribers/${row.subscriberId}`} className="underline-offset-4 hover:underline">
+                      {row.name}
+                    </Link>
+                  </TableCell>
+
+                  <TableCell className="px-3 text-muted-foreground">
+                    {row.email}
+                  </TableCell>
+
+                  <TableCell className="px-3 tabular-nums">
+                    {formatDateOnly(row.createdAt.toISOString().slice(0, 10))}
+                  </TableCell>
+
                   <TableCell className="px-3">
                     <SubscriberStatusBadge status={row.status} />
                   </TableCell>
+
                   <TableCell className="px-3">
-                    <SubscriberProfilesPopover subscriberName={row.name} profiles={row.profiles} />
+                    {row.planName ?? <span className="text-muted-foreground">No plan</span>}
                   </TableCell>
-                  <TableCell className="px-3 text-right tabular-nums">{row.watchTime}</TableCell>
-                  {showPayments && row.payments && (
-                    <TableCell className="px-3">
+
+                  <TableCell className="px-3">
+                    {row.profiles.length === 0 ? (
+                      <span className="text-muted-foreground">No profiles</span>
+                    ) : (
                       <Button
                         variant="outline"
                         size="sm"
                         className="border-dashed font-normal tabular-nums"
                         aria-expanded={isExpanded}
-                        aria-controls={paymentsId}
+                        aria-controls={detailsId}
                         onClick={() => setExpandedSubscriberId(isExpanded ? null : row.subscriberId)}
                       >
-                        {row.payments.length} {row.payments.length === 1 ? "payment" : "payments"}
+                        {row.profiles.length} {row.profiles.length === 1 ? "profile" : "profiles"}
                         <ChevronDown
                           data-icon="inline-end"
                           aria-hidden
                           className={cn("transition-transform", isExpanded && "rotate-180")}
                         />
                       </Button>
-                    </TableCell>
-                  )}
+                    )}
+                  </TableCell>
+
+                  <TableCell className="px-3 text-right tabular-nums">
+                    {formatWatchTime(row.minutesWatched)}
+                  </TableCell>
                 </TableRow>
 
-                {isExpanded && row.payments && (
-                  <TableRow id={paymentsId} className="border-dashed bg-muted/50 hover:bg-muted/50">
-                    <TableCell colSpan={columnCount} className="px-3 pt-0 pb-4 whitespace-normal">
+                {isExpanded && (
+                  <TableRow id={detailsId} className="border-dashed bg-muted/50 hover:bg-muted/50">
+                    <TableCell colSpan={COLUMN_COUNT} className="px-3 pt-0 pb-4 whitespace-normal">
                       <div className="border border-dashed bg-background px-3 py-1">
-                        <p className="sr-only">Payments of {row.name}</p>
-                        <SubscriberPayments payments={row.payments} />
+                        <SubscriberProfiles profiles={row.profiles} />
                       </div>
                     </TableCell>
                   </TableRow>

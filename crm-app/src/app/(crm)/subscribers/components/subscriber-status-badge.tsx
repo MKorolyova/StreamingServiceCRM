@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatEnumLabel } from "@/lib/format";
 import type { SubscriberStatus } from "@/types/subscribers";
 
-const STATUS_CLASS_NAME: Record<SubscriberStatus, string> = {
+const STATUS_CLASS_NAME = {
   ACTIVE: "bg-primary text-primary-foreground",
   PAUSED: "border-dashed border-border bg-transparent text-foreground",
   CANCELED: "bg-muted text-muted-foreground line-through",

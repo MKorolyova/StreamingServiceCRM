@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DEVICE_TYPE_LABELS, LIST_PRICE_CURRENCY, MATURITY_LABELS } from "@/constants/constants";
+import { DEVICE_TYPE_LABELS, LIST_PRICE_CURRENCY } from "@/constants/constants";
 import { requireAuthContext } from "@/lib/auth/auth-context";
 import { formatCount, formatDate, formatDateOnly, formatEnumLabel, formatMoney, formatWatchTime } from "@/lib/format";
 import { uuidSchema } from "@/validators/common";
@@ -95,14 +95,7 @@ export default async function SubscriberPage({ params }: { params: Promise<{ sub
           </ChartCard>
 
           <ChartCard title="Profiles" description="The viewers on this account.">
-            <SubscriberProfiles
-              profiles={profiles.map((profile) => ({
-                profileName: profile.profileName,
-                maturityLabel: MATURITY_LABELS[profile.maturityLevel],
-                language: profile.language,
-                isDefault: profile.isDefault,
-              }))}
-            />
+            <SubscriberProfiles profiles={profiles} />
           </ChartCard>
         </section>
 

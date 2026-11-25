@@ -1,24 +1,25 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
-export type SubscribersTab = "list" | "breakdown";
-
-const TABS: { value: SubscribersTab; label: string; href: string }[] = [
-  { value: "list", label: "All subscribers", href: "/subscribers" },
-  { value: "breakdown", label: "Breakdown", href: "/subscribers?tab=breakdown" },
+const TABS: { label: string; href: string }[] = [
+  { label: "All subscribers", href: "/subscribers" },
 ];
 
-/** Tabs kept in the URL, so a view can be linked to and survives a refresh. */
-export function SubscribersTabs({ activeTab }: { activeTab: SubscribersTab }) {
+export function SubscribersTabs() {
+  const pathname = usePathname();
+
   return (
-    <nav aria-label="Subscriber views" className="flex gap-1 border-b border-dashed">
+    <nav aria-label="Subscriber views" className="flex gap-1 overflow-x-auto border-b border-dashed">
       {TABS.map((tab) => {
-        const isActive = tab.value === activeTab;
+        const isActive = tab.href === pathname;
 
         return (
           <Button
-            key={tab.value}
+            key={tab.href}
             variant={isActive ? "default" : "ghost"}
             size="lg"
             className="h-10 px-4 font-mono text-xs font-normal tracking-[0.14em] uppercase"
