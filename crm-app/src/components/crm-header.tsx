@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import { Separator } from "@/components/ui/separator";
 
-import { PlayMark } from "../../components/landing-primitives";
-import { SignOutButton } from "../../components/sign-out-button";
+import { PlayMark } from "../app/components/landing-primitives";
+import { SignOutButton } from "../app/components/sign-out-button";
 
 export function CrmHeader() {
   return (

@@ -1,7 +1,6 @@
-import { CrmHeader } from "./components/crm-header";
-import { CrmSidebar } from "./components/crm-sidebar";
+import { CrmHeader } from "../../components/crm-header";
+import { CrmSidebar } from "../../components/crm-sidebar";
 
-/** Shell shared by every dashboard page: header on top, section navigation beside the page. */
 export default function CrmLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex flex-1 flex-col selection:bg-primary selection:text-primary-foreground">

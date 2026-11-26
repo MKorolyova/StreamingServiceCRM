@@ -4,12 +4,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ROLE_LABELS } from "@/constants/constants";
 import { getAuthContext } from "@/lib/auth/auth-context";
 
-import { BracketLabel } from "../../components/landing-primitives";
+import { BracketLabel } from "../app/components/landing-primitives";
 import { CrmNavLinks } from "./crm-nav-links";
 import { CRM_SECTIONS } from "./crm-sections";
 
 async function SidebarContent() {
-  // Null for a signed-out or pending viewer: the page itself shows why, the menu stays empty.
   const context = await getAuthContext();
   if (!context) return null;
 
@@ -40,7 +39,6 @@ function SidebarSkeleton() {
   );
 }
 
-/** Section navigation: a column on wide screens, a scrolling strip on small ones. */
 export function CrmSidebar() {
   return (
     <aside className="top-16 z-20 shrink-0 border-b border-dashed bg-background lg:sticky lg:h-[calc(100dvh-4rem)] lg:w-60 lg:border-r lg:border-b-0">

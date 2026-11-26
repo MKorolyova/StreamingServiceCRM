@@ -3,12 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "cn";
-
 import { CRM_SECTIONS } from "./crm-sections";
 
-const ITEM_CLASS_NAME = "flex h-9 shrink-0 items-center gap-2.5 px-3 text-[0.9rem] whitespace-nowrap";
-
-/** Navigation links for the sections the viewer may see, with the current one marked. */
 export function CrmNavLinks({ visibleKeys }: { visibleKeys: string[] }) {
   const pathname = usePathname();
   const sections = CRM_SECTIONS.filter((section) => visibleKeys.includes(section.key));
@@ -21,7 +17,7 @@ export function CrmNavLinks({ visibleKeys }: { visibleKeys: string[] }) {
         if (!section.isAvailable) {
           return (
             <li key={section.key}>
-              <span aria-disabled className={cn(ITEM_CLASS_NAME, "text-muted-foreground/70")}>
+              <span aria-disabled className={cn("flex h-9 shrink-0 items-center gap-2.5 px-3 text-[0.9rem] whitespace-nowrap", "text-muted-foreground/70")}>
                 <section.icon aria-hidden className="size-4" strokeWidth={1.5} />
                 {section.label}
                 <span className="ml-auto border border-dashed px-1.5 py-px font-mono text-[0.6rem] tracking-wider uppercase">
@@ -38,7 +34,7 @@ export function CrmNavLinks({ visibleKeys }: { visibleKeys: string[] }) {
               href={section.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                ITEM_CLASS_NAME,
+                "flex h-9 shrink-0 items-center gap-2.5 px-3 text-[0.9rem] whitespace-nowrap",
                 "outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50",
                 isActive
                   ? "bg-primary font-medium text-primary-foreground"
