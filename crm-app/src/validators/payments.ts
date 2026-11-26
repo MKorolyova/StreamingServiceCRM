@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { paymentStatusEnum } from "@/db/schema";
 import { 
+  countryCodeSchema,
+  isoDateSchema,
   uuidSchema,
   paginationSchema,
  } from "./common";
@@ -18,7 +20,11 @@ export const createPaymentSchema = z.object({
 });
 
 export const paginationPaymentsSchema = paginationSchema.extend({
-  status: z.enum(paymentStatusEnum.enumValues, "Invalid payment status").optional(),
-  method: z.string().trim().max(30, "Payment method is too long").optional(),
-  subscriberId: uuidSchema.optional(),
+  sortBy: z.enum(["subscriber", "email", "created", "method", "status", "amount"]).default("created"),
+  sortDir: z.enum(["asc", "desc"]).default("desc"),
+  countryCode: countryCodeSchema.optional().catch(undefined),
+  method: z.string().trim().max(30, "Payment method is too long").optional().catch(undefined),
+  status: z.enum(paymentStatusEnum.enumValues, "Invalid payment status").optional().catch(undefined),
+  from: isoDateSchema.optional().catch(undefined),
+  to: isoDateSchema.optional().catch(undefined),
 })

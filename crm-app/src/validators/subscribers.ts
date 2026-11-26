@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { NO_PLAN_FILTER } from "@/constants/constants";
 import { maturityLevelEnum, subscriberStatusEnum } from "@/db/schema";
 import {
   countryCodeSchema,
@@ -29,8 +30,12 @@ export const updateSubscriberSchema = createSubscriberSchema
   .partial();
 
 export const paginationSubscribersSchema = paginationSchema.extend({
-  status: subscriberStatusSchema.optional(),
-  countryCode: countryCodeSchema.optional(),
+  sortBy: z.enum(["name", "email", "created", "status", "plan", "profiles", "watchTime"]).default("name"),
+  status: subscriberStatusSchema.optional().catch(undefined),
+  countryCode: countryCodeSchema.optional().catch(undefined),
+  plan: z.union([z.literal(NO_PLAN_FILTER), uuidSchema]).optional().catch(undefined),
+  from: isoDateSchema.optional().catch(undefined),
+  to: isoDateSchema.optional().catch(undefined),
 });
 
 // ---------------------------------------------------------------------------

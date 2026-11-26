@@ -7,7 +7,12 @@ import { Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 
-export function SignOutButton({ className }: { className?: string }) {
+type SignOutButtonProps = {
+  className?: string;
+  variant?: "default" | "ghost";
+};
+
+export function SignOutButton({ className, variant = "default" }: SignOutButtonProps) {
   const { signOut } = useClerk();
   const [isSigningOut, setIsSigningOut] = useState(false);
 
@@ -28,7 +33,7 @@ export function SignOutButton({ className }: { className?: string }) {
   }
 
   return (
-    <Button size="lg" className={className} disabled={isSigningOut} onClick={signOutUser}>
+    <Button size="lg" variant={variant} className={className} disabled={isSigningOut} onClick={signOutUser}>
       {isSigningOut && <Loader2Icon data-icon="inline-start" className="animate-spin" aria-hidden />}
       {isSigningOut ? "Signing out…" : "Sign out"}
     </Button>

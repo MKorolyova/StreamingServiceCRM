@@ -33,18 +33,27 @@ type BracketLabelProps = {
   className?: string;
   /** Show a small play arrow before the label. */
   marker?: boolean;
+  /** `destructive` turns the label and its arrow red, for blocked or failed states. */
+  tone?: "default" | "destructive";
 };
 
 /** Small monospace section label in square brackets, e.g. [About]. */
-export function BracketLabel({ children, className, marker = false }: BracketLabelProps) {
+export function BracketLabel({ children, className, marker = false, tone = "default" }: BracketLabelProps) {
+  const isDestructive = tone === "destructive";
+
   return (
     <p className={cn("flex items-center gap-2.5 font-mono text-xs tracking-[0.14em] uppercase", className)}>
       {marker && (
-        <svg viewBox="0 0 12 10" aria-hidden className="h-2.5 w-3 shrink-0 text-foreground" fill="currentColor">
+        <svg
+          viewBox="0 0 12 10"
+          aria-hidden
+          className={cn("h-2.5 w-3 shrink-0", isDestructive ? "text-destructive" : "text-foreground")}
+          fill="currentColor"
+        >
           <path d="M0 0 12 5 0 10Z" />
         </svg>
       )}
-      <span className="text-muted-foreground">[{children}]</span>
+      <span className={isDestructive ? "text-destructive" : "text-muted-foreground"}>[{children}]</span>
     </p>
   );
 }

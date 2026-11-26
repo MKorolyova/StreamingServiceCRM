@@ -28,8 +28,10 @@ export const updateMovieSchema = createMovieSchema
   .partial();
 
 export const paginationMoviesQuerySchema = paginationSchema.extend({
-  maturityRating:  z.enum(maturityLevelEnum.enumValues, "Invalid maturity rating").optional(),
-  releaseYear: z.coerce.number().int().min(FIRST_FILM_YEAR).max(MAX_RELEASE_YEAR).optional(),
+  sortBy: z.enum(["title", "released", "runtime", "maturity", "views", "completion", "rating"]).default("title"),
+  genreId: uuidSchema.optional().catch(undefined),
+  maturityRating:  z.enum(maturityLevelEnum.enumValues, "Invalid maturity rating").optional().catch(undefined),
+  releaseYear: z.coerce.number().int().min(FIRST_FILM_YEAR).max(MAX_RELEASE_YEAR).optional().catch(undefined),
 });
 
 // ---------------------------------------------------------------------------

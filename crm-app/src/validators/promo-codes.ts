@@ -24,9 +24,7 @@ export const updatePromoCodeSchema = createPromoCodeSchema
   .partial();
 
 export const paginationPromoCodesSchema = paginationSchema.extend({
-  expiryDate: isoDateSchema.optional(),
-  maxUses: z.number("Max uses must be a number").int("Max uses must be a whole number").min(1, "Must allow at least 1 use").max(2_147_483_647, "Max uses is too large").optional(),
-  expired: z.string().boolean().optional(),
+  sortBy: z.enum(["code", "discount", "uses", "expiry", "givenAway"]).default("expiry"),
 });
 
 // ---------------------------------------------------------------------------
