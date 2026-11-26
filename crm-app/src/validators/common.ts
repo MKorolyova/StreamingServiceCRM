@@ -30,5 +30,4 @@ export const paginationSchema = z.object({
     pageSize: z.coerce.number().int().min(1).max(100).default(20),
     query: z.string().trim().max(100).optional(),
     sortDir: z.enum(["asc", "desc"]).default("asc"),
-    sortBy: z.string().trim().max(50).optional()
 });
