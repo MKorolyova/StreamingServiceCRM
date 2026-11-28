@@ -36,8 +36,6 @@ type UsersListTabProps = ListUsersPageQuery & { currentUserId: string; canManage
 
 export async function UsersListTab({ currentUserId, canManage, ...params }: UsersListTabProps) {
   const [userEntries, usersTotal] = await Promise.all([listUsers(params), getUsersTotal(params)]);
-
-  // A link to a page past the end, such as after the list shrank: go to the last page instead.
   if (usersTotal > 0 && userEntries.length === 0) {
     redirect(usersHref({ ...params, page: Math.ceil(usersTotal / params.pageSize) }));
   }
